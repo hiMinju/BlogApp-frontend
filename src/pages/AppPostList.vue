@@ -1,35 +1,6 @@
 <template>
   <v-app id="inspire">
-    <v-navigation-drawer
-      v-model="drawer"
-      app
-      clipped
-    >
-      <v-list
-        dense
-        nav
-      >
-        <v-list-item
-          v-for="item in items"
-          :key="item.title"
-          link
-        >
-          <v-list-item-icon>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-icon>
-
-          <v-list-item-content>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
-
-    <v-app-bar app clipped-left color="light-green lighten-3" dark>
-      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-
-      <v-toolbar-title>Application</v-toolbar-title>
-    </v-app-bar>
+    <MainMenu />
 
     <v-main>
       <PostList />
@@ -42,18 +13,17 @@
 </template>
 
 <script>
-import PostList from '../components/PostList.vue';
+import MainMenu from "../components/MainMenu.vue";
+import PostList from "../components/PostList.vue";
 
-  export default {
-    components: { PostList },
-    
-    data: () => ({ 
-      drawer: null,
-      items: [
-          { title: 'Dashboard', icon: 'mdi-view-dashboard' },
-          { title: 'Photos', icon: 'mdi-image' },
-          { title: 'About', icon: 'mdi-help-box' },
-        ],
-    }),
-  }
+export default {
+  components: { MainMenu, PostList },
+
+  props: {
+    source: String
+  },
+  data: () => ({
+    drawer: null,
+  }),
+};
 </script>
