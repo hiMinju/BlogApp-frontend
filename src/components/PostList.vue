@@ -93,13 +93,15 @@
         <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
       </template>
       <template v-slot:no-data>
-        <v-btn color="primary" @click="initialize"> Reset </v-btn>
+        <v-btn color="primary" @click="fetchPostList"> Reset </v-btn>
       </template>
     </v-data-table>
   </v-container>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "HelloWorld",
 
@@ -111,7 +113,7 @@ export default {
         text: "ID",
         align: "start",
         sortable: false,
-        value: "name",
+        value: "id",
       },
       { text: "제 목", value: "title" },
       { text: "요 약", value: "description" },
@@ -153,37 +155,22 @@ export default {
   },
 
   created () {
-    this.initialize()
+    this.fetchPostList()
   },
 
   methods: {
-    initialize () {
-      this.posts = [
-        {
-          name: '1',
-          title: 'title',
-          description: 159,
-          modify_dt: 6.0,
-          owner: 24,
-          actions: 4.0,
-        },
-        {
-          name: 'Frozen Yogurt',
-          title: 'title',
-          description: 159,
-          modify_dt: 6.0,
-          owner: 24,
-          actions: 4.0,
-        },
-        {
-          name: 'Frozen Yogurt',
-          title: 'title',
-          description: 159,
-          modify_dt: 6.0,
-          owner: 24,
-          actions: 4.0,
-        },
-      ]
+    fetchPostList () {
+      console.log("fetchPostList()...");
+
+      axios.get('/api/post/list')
+      .then(res => {
+        console.log("POST GET RES", res);
+        this.posts = res.data;
+      })
+      .catch(err => {
+        console.log("POST GET ERR.RESPONSE", err.response);
+        alert(err.response.status + ' ' + err.response.statusText);
+      });
     },
 
     editItem (item) {
