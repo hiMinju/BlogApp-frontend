@@ -1,78 +1,69 @@
 <template>
   <v-container>
-    <v-row class="text-center">
-      <v-col cols="12">
-        <v-img
-          :src="require('../assets/logo.svg')"
-          class="my-3"
-          contain
-          height="200"
-        />
-      </v-col>
-
-      <v-col class="mb-4">
-        <h1 class="display-2 font-weight-bold mb-3">
-          Welcome to Vuetify (PostDetail)
-        </h1>
-
-        <p class="subheading font-weight-regular">
-          For help and collaboration with other Vuetify developers,
-          <br />please join our online
-          <a href="https://community.vuetifyjs.com" target="_blank"
-            >Discord Community</a
-          >
-        </p>
-      </v-col>
-
-      <v-col class="mb-5" cols="12">
-        <h2 class="headline font-weight-bold mb-3">What's next?</h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(next, i) in whatsNext"
-            :key="i"
-            :href="next.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ next.text }}
-          </a>
-        </v-row>
-      </v-col>
-
-      <v-col class="mb-5" cols="12">
-        <h2 class="headline font-weight-bold mb-3">Important Links</h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(link, i) in importantLinks"
-            :key="i"
-            :href="link.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ link.text }}
-          </a>
-        </v-row>
-      </v-col>
-
-      <v-col class="mb-5" cols="12">
-        <h2 class="headline font-weight-bold mb-3">Ecosystem</h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(eco, i) in ecosystem"
-            :key="i"
-            :href="eco.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ eco.text }}
-          </a>
-        </v-row>
-      </v-col>
-    </v-row>
-  </v-container>
+      <v-row align="center" justify="center">
+        <v-col cols="12" lg="10">
+          <h1>Post title here</h1>
+          <p>2021-10-19, written by minju</p>
+        </v-col>
+      </v-row>
+      <v-row align="start" justify="center">
+        <v-col sm="8" lg="7">
+          <v-card class="pa-2" outlined tile>
+            <p>
+              I study Vue.js and Django. <br>
+              <br>
+              <br>
+              <br>
+              <br>
+              <br>
+              <br>
+              <br>
+              <br>
+              <br>
+              <br>
+              <br>
+              <br>
+              <br>
+              And more vuetify.
+            </p>
+            <div>
+              <strong>TAGS:</strong>
+              <v-chip class="ma-2" color="defualt" outlined>
+                python
+              </v-chip>
+              <v-chip class="ma-2" color="defualt" outlined>
+                django
+              </v-chip>
+            </div>
+          </v-card>
+        </v-col>
+        <v-col cols="12" sm="4" lg="3">
+          <v-card class="pa-2 mb-5" elevation="2">
+            <p>prev post</p>
+            <h2>Previous title here</h2>
+          </v-card>
+          <v-card class="pa-2 mb-5" elevation="2">
+            <p>next post</p>
+            <h2>Next title here</h2>
+          </v-card>
+          <v-card class="pa-2" elevation="2">
+            <h2>Tag cloud</h2>
+            <v-chip class="ma-2" color="primary" outlined>
+              <v-avatar left class="blue lighten-5">
+                1
+              </v-avatar>
+              python
+            </v-chip>
+            <v-chip class="ma-2" color="primary" outlined>
+              <v-avatar left class="blue lighten-5">
+                1
+              </v-avatar>
+              python
+            </v-chip>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
 </template>
 
 <script>
