@@ -12,7 +12,8 @@
             <p style="white-space: pre-wrap;"> {{ post.content }} </p>
             <div>
               <strong>TAGS:</strong>
-              <v-chip class="ma-2" color="defualt" outlined v-for="(tag, index) in post.tags" :key="index">
+              <v-chip class="ma-2 my-tag" color="defualt" outlined v-for="(tag, index) in post.tags" :key="index"
+                @click="serverPage(tag)">
                 {{ tag }}
               </v-chip>
             </div>
@@ -29,17 +30,12 @@
           </v-card>
           <v-card class="pa-2" elevation="2">
             <h2>Tag cloud</h2>
-            <v-chip class="ma-2" color="primary" outlined>
-              <v-avatar left class="blue lighten-5">
-                1
+            <v-chip v-for="(tag, index) in tagCloud" :key="index" @click="serverPage(tag.name)"
+            class="ma-2 my-tag" :color="tag.color" outlined>
+              <v-avatar left :class="tag.color + ' lighten-5'">
+                {{ tag.count }}
               </v-avatar>
-              python
-            </v-chip>
-            <v-chip class="ma-2" color="primary" outlined>
-              <v-avatar left class="blue lighten-5">
-                1
-              </v-avatar>
-              python
+              {{ tag.name }}
             </v-chip>
           </v-card>
         </v-col>
@@ -55,12 +51,14 @@ export default {
 
   data: () => ({
     post: {},
+    tagCloud: [],
   }),
 
   created() {
     console.log("created()...");
-    const postId = 2;
+    const postId = location.pathname.split('/')[3] || 2;
     this.fetchPostDetail(postId);
+    this.fetchTagCloud();
   },
 
   methods: {
@@ -75,6 +73,30 @@ export default {
         console.log("POST DETAIL GET ERR.RESPONSE", err.response);
         alert(err.response.status + ' ' + err.response.statusText);
       })
+    },
+
+    fetchTagCloud() {
+      console.log("fetchTagCloud()...");
+      axios.get(`/api/tag/cloud/`)
+      .then(res => {
+        console.log("TAG CLOUD GET RES", res);
+        this.tagCloud = res.data;
+        // tage.weight
+        this.tagCloud.forEach(element => {
+          if (element.weight === 3) element.color = 'blue';
+          else if (element.weight === 2) element.color = 'green';
+          else if (element.weight === 1) element.color = 'grey';
+        })
+      })
+      .catch(err=> {
+        console.log("TAG CLOUD GET ERR.RESPONSE", err.response);
+        alert(err.response.status + ' ' + err.response.statusText);
+      })
+    },
+
+    serverPage(tagname) {
+      console.log("serverPage()...", tagname);
+      location.href = `/blog/post/list/?tagname=${tagname}`
     }
   }
 };
@@ -86,5 +108,9 @@ export default {
   text-decoration: underline; 
   text-underline-position:under;
   text-decoration-thickness: 1px;
+}
+
+.my-tag:hover {
+  cursor: pointer;
 }
 </style>
