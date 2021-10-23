@@ -21,11 +21,11 @@
         <v-col cols="12" sm="4" lg="3">
           <v-card class="pa-2 mb-5" elevation="2">
             <p>prev post</p>
-            <h2>Previous title here</h2>
+            <h2 v-if="post.prev" @click="fetchPostDetail(post.prev.id)" class="my-hover">{{ post.prev.title }}</h2>
           </v-card>
           <v-card class="pa-2 mb-5" elevation="2">
             <p>next post</p>
-            <h2>Next title here</h2>
+            <h2 v-if="post.next" @click="fetchPostDetail(post.next.id)" class="my-hover">{{ post.next.title }}</h2>
           </v-card>
           <v-card class="pa-2" elevation="2">
             <h2>Tag cloud</h2>
@@ -59,13 +59,14 @@ export default {
 
   created() {
     console.log("created()...");
-    this.fetchPostDetail();
+    const postId = 2;
+    this.fetchPostDetail(postId);
   },
 
   methods: {
-    fetchPostDetail() {
+    fetchPostDetail(postId) {
       console.log("fetchPostDetail()...");
-      axios.get('/api/post/3/')
+      axios.get(`/api/post/${postId}/`)
       .then(res => {
         console.log("POST DETAIL GET RES", res);
         this.post = res.data;
@@ -78,3 +79,12 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.my-hover:hover {
+  cursor: pointer;
+  text-decoration: underline; 
+  text-underline-position:under;
+  text-decoration-thickness: 1px;
+}
+</style>
