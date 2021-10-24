@@ -49,32 +49,186 @@
         </template>
 
         <v-list>
-          <v-list-item>
+          <v-list-item @click="dialog.login = true">
             <v-list-item-title>Login</v-list-item-title>
           </v-list-item>
-          <v-list-item>
+          <v-list-item @click="dialog.register = true">
             <v-list-item-title>Register</v-list-item-title>
           </v-list-item>
           <v-list-item>
             <v-list-item-title>Logout</v-list-item-title>
           </v-list-item>
-          <v-list-item>
+          <v-list-item @click="dialog.pwchg = true">
             <v-list-item-title>Password Change</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
-    </v-app-bar>      
+    </v-app-bar>
+
+    <!-- login dialog -->
+    <v-dialog v-model="dialog.login" max-width="600">
+      <v-card class="elevation-12">
+        <v-toolbar color="primary" dark flat>
+          <v-toolbar-title>Login form</v-toolbar-title>
+        </v-toolbar>
+        <v-card-text>
+          <v-form id="login-form" ref="loginForm">
+            <v-text-field
+              label="Username"
+              name="username"
+              prepend-icon="mdi-account"
+              type="text"
+            ></v-text-field>
+            <v-text-field
+              label="Password"
+              name="password"
+              prepend-icon="mdi-lock"
+              type="password"
+            ></v-text-field>
+          </v-form>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn text color="grey" @click="cancel('login')">Cancel</v-btn>
+          <v-btn color="primary" class="mr-5" @click="save('login')"
+            >Login</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <!-- register dialog -->
+    <v-dialog v-model="dialog.register" max-width="600">
+      <v-card class="elevation-12">
+        <v-toolbar color="success" dark flat>
+          <v-toolbar-title>Register form</v-toolbar-title>
+        </v-toolbar>
+        <v-card-text>
+          <v-form id="register-form" ref="registerForm">
+            <v-text-field
+              label="Username"
+              name="username"
+              prepend-icon="mdi-account"
+              type="text"
+            ></v-text-field>
+            <v-text-field
+              label="Password"
+              name="password1"
+              prepend-icon="mdi-lock"
+              type="password"
+            ></v-text-field>
+            <v-text-field
+              label="Password Check"
+              name="password2"
+              prepend-icon="mdi-lock"
+              type="password"
+            ></v-text-field>
+          </v-form>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn text color="grey" @click="cancel('register')">Cancel</v-btn>
+          <v-btn color="success" class="mr-5" @click="save('register')">Register</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <!-- pwd change dialog -->
+    <v-dialog v-model="dialog.pwchg" max-width="600">
+      <v-card class="elevation-12">
+        <v-toolbar color="warning" dark flat>
+          <v-toolbar-title>Password Change form</v-toolbar-title>
+        </v-toolbar>
+        <v-card-text>
+          <v-form id="pwdChg-form" ref="pwdChgForm">
+            <v-text-field
+              label="Original Password"
+              name="old_password"
+              prepend-icon="mdi-lock"
+              type="password"
+            ></v-text-field>
+            <v-text-field
+              label="New Password"
+              name="new_password1"
+              prepend-icon="mdi-lock"
+              type="password"
+            ></v-text-field>
+            <v-text-field
+              label="New Password Check"
+              name="new_password2"
+              prepend-icon="mdi-lock"
+              type="password"
+            ></v-text-field>
+          </v-form>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn text color="grey" @click="dialog.pwchg = false">Cancel</v-btn>
+          <v-btn color="warning" class="mr-5" @click="dialog.pwchg = false">Change</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+
+axios.defaults.xsrfCookieName = "csrftoken"
+axios.defaults.xsrfHeaderName = "X-CSRFToken"
+
 export default {
   data: () => ({
     drawer: null,
+    dialog: {
+      login: false,
+      register: false,
+      pwdchg: false,
+    },
+    me: {},
   }),
-}
+
+  methods: {
+    cancel(kind) {
+      console.log("cancel()...", kind);
+      if (kind === 'login') this.dialog.login = false;
+      else if (kind === 'register') this.dialog.register = false;
+      else if (kind === 'pwdchg') this.dialog.pwdchg = false;
+    },
+
+    save(kind) {
+      console.log("save()...", kind);
+      if (kind === 'login') {
+        this.login();
+        this.dialog.login = false;
+      }
+      else if (kind === 'register') {
+        this.register();
+        this.dialog.register = false;
+      }
+      else if (kind === 'pwdchg') {
+        this.pwdchg();
+        this.dialog.pwdchg = false;
+      }
+    },
+
+    login() {
+      console.log("login()...");
+      const postData = new FormData(document.getElementById('login-form'));
+      axios.post('/api/login/', postData)
+      .then(res => {
+        console.log("LOGIN POST RES", res);
+        this.me = res.data;
+      })
+      .catch(err => {
+        console.log("LOGIN POST ERR.RESPONSE", err.response);
+        alert("Login Error!");
+      });
+    }
+  }
+};
 </script>
 
 <style>
-
 </style>
