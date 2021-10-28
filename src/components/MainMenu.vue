@@ -43,24 +43,28 @@
         <template v-slot:activator="{ on, attrs }">
           <v-btn text v-bind="attrs" v-on="on">
             <v-icon>mdi-account</v-icon>
-            Anonymous
+            {{ me.username }}
             <v-icon>mdi-dots-vertical</v-icon>
           </v-btn>
         </template>
 
         <v-list>
-          <v-list-item @click="dialog.login = true">
-            <v-list-item-title>Login</v-list-item-title>
-          </v-list-item>
-          <v-list-item @click="dialog.register = true">
-            <v-list-item-title>Register</v-list-item-title>
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-title>Logout</v-list-item-title>
-          </v-list-item>
-          <v-list-item @click="dialog.pwchg = true">
-            <v-list-item-title>Password Change</v-list-item-title>
-          </v-list-item>
+          <template v-if="me.username === 'Annonymous'">
+            <v-list-item @click="dialogOpen('login')">
+              <v-list-item-title>Login</v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="dialogOpen('register')">
+              <v-list-item-title>Register</v-list-item-title>
+            </v-list-item>
+          </template>
+          <template v-else>
+            <v-list-item>
+              <v-list-item-title>Logout</v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="dialogOpen('pwdchg')">
+              <v-list-item-title>Password Change</v-list-item-title>
+            </v-list-item>
+          </template>
         </v-list>
       </v-menu>
     </v-app-bar>
@@ -186,15 +190,36 @@ export default {
       register: false,
       pwdchg: false,
     },
-    me: {},
+    me: { username: 'Annonymous' },
   }),
 
   methods: {
+    dialogOpen(kind) {
+      console.log("dialogOpen()...", kind);
+      if (kind === 'login') {
+        this.dialog.login = true;
+      }
+      else if (kind === 'register') {
+        this.dialog.register = true;
+      }
+      else if (kind === 'pwdchg') {
+        this.dialog.pwdchg = true;
+      }        
+    },
     cancel(kind) {
       console.log("cancel()...", kind);
-      if (kind === 'login') this.dialog.login = false;
-      else if (kind === 'register') this.dialog.register = false;
-      else if (kind === 'pwdchg') this.dialog.pwdchg = false;
+      if (kind === 'login') {
+        this.dialog.login = false;
+        this.$refs.loginForm.reset();
+      }
+      else if (kind === 'register') {
+        this.dialog.register = false;
+        this.$refs.registerForm.reset();
+      }
+      else if (kind === 'pwdchg') {
+        this.dialog.pwdchg = false;
+        this.$refs.pwdchgForm.reset();
+      }
     },
 
     save(kind) {
@@ -202,14 +227,17 @@ export default {
       if (kind === 'login') {
         this.login();
         this.dialog.login = false;
+        this.$refs.loginForm.reset();
       }
       else if (kind === 'register') {
         this.register();
         this.dialog.register = false;
+        this.$refs.registerForm.reset();
       }
       else if (kind === 'pwdchg') {
         this.pwdchg();
         this.dialog.pwdchg = false;
+        this.$refs.pwdchgForm.reset();
       }
     },
 
