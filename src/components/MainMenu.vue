@@ -139,16 +139,16 @@
     </v-dialog>
 
     <!-- pwd change dialog -->
-    <v-dialog v-model="dialog.pwchg" max-width="600">
+    <v-dialog v-model="dialog.pwdchg" max-width="600">
       <v-card class="elevation-12">
         <v-toolbar color="warning" dark flat>
           <v-toolbar-title>Password Change form</v-toolbar-title>
         </v-toolbar>
         <v-card-text>
-          <v-form id="pwdChg-form" ref="pwdChgForm">
+          <v-form id="pwdchg-form" ref="pwdchgForm">
             <v-text-field
               label="Original Password"
-              name="old_password"
+              name="original_password"
               prepend-icon="mdi-lock"
               type="password"
             ></v-text-field>
@@ -192,6 +192,10 @@ export default {
     },
     me: { username: 'Annonymous' },
   }),
+
+  created() {
+    this.getUserInfo();
+  },
 
   methods: {
     dialogOpen(kind) {
@@ -282,6 +286,33 @@ export default {
           console.log("LOGOUT GET ERR.RESPONSE", err.response);
           alert("Logout Error!");
         });
+    },
+
+    pwdchg() {
+      console.log("pwdchg()...");
+      const postData = new FormData(document.getElementById('pwdchg-form'));
+      axios.post('/api/pwdchg/', postData)
+        .then(res => {
+          console.log("PASSWORD CHANGE POST RES", res);
+          alert(`user ${this.me.username} password changed OK`);
+        })
+        .catch(err => {
+          console.log("PASSWORD CHANGE POST ERR.RESPONSE", err.response);
+          alert("Password Change Error!");
+        });
+    },
+
+    getUserInfo() {
+      console.log("getUserInfo()...");
+      axios.get('/api/me/')
+      .then(res => {
+        console.log("GET USER INFO GET RES", res);
+        this.me = res.data;
+      })
+      .catch(err => {
+        console.log("GET USER INFO GET ERR.RESPONSE", err.response);
+        alert(err.response.status + ' ' + err.response.statusText);
+      })
     },
   }
 };
