@@ -58,7 +58,7 @@
             </v-list-item>
           </template>
           <template v-else>
-            <v-list-item>
+            <v-list-item @click="logout()">
               <v-list-item-title>Logout</v-list-item-title>
             </v-list-item>
             <v-list-item @click="dialogOpen('pwdchg')">
@@ -168,8 +168,8 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn text color="grey" @click="dialog.pwchg = false">Cancel</v-btn>
-          <v-btn color="warning" class="mr-5" @click="dialog.pwchg = false">Change</v-btn>
+          <v-btn text color="grey" @click="cancel('pwdchg')">Cancel</v-btn>
+          <v-btn color="warning" class="mr-5" @click="save('pwdchg')">Change</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -245,15 +245,44 @@ export default {
       console.log("login()...");
       const postData = new FormData(document.getElementById('login-form'));
       axios.post('/api/login/', postData)
-      .then(res => {
-        console.log("LOGIN POST RES", res);
-        this.me = res.data;
-      })
-      .catch(err => {
-        console.log("LOGIN POST ERR.RESPONSE", err.response);
-        alert("Login Error!");
-      });
-    }
+        .then(res => {
+          console.log("LOGIN POST RES", res);
+          this.me = res.data;
+        })
+        .catch(err => {
+          console.log("LOGIN POST ERR.RESPONSE", err.response);
+          alert("Login Error!");
+        });
+    },
+
+    register() {
+      console.log("register()...");
+      const postData = new FormData(document.getElementById('register-form'));
+      axios.post('/api/register/', postData)
+        .then(res => {
+          console.log("REGISTER POST RES", res);
+          alert(`user ${res.data.username} create OK`);
+          //this.me = res.data;
+        })
+        .catch(err => {
+          console.log("REGISTER POST ERR.RESPONSE", err.response);
+          alert("Register Error!");
+        });
+    },
+
+    logout() {
+      console.log("logout()...");
+      axios.get('/api/logout/')
+        .then(res => {
+          console.log("LOGOUT POST RES", res);
+          alert(`user ${this.me.username} logout OK`);
+          this.me = {username: 'Annonymous'};
+        })
+        .catch(err => {
+          console.log("LOGOUT GET ERR.RESPONSE", err.response);
+          alert("Logout Error!");
+        });
+    },
   }
 };
 </script>
