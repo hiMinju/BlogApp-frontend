@@ -33,9 +33,9 @@
       <v-btn text href="/">Home</v-btn>
       <v-btn text href="/blog/post/list">Blog</v-btn>
       <v-btn text href="/admin">Admin</v-btn>
-      <v-btn text>/</v-btn>
+      <!-- <v-btn text>/</v-btn>
       <v-btn text href="/post_list.html">PostList</v-btn>
-      <v-btn text href="/post_detail.html">PostDetail</v-btn>
+      <v-btn text href="/post_detail.html">PostDetail</v-btn> -->
 
       <v-spacer></v-spacer>
 
@@ -178,6 +178,7 @@
 
 <script>
 import axios from 'axios';
+import EventBus from './event_bus';
 
 axios.defaults.xsrfCookieName = "csrftoken"
 axios.defaults.xsrfHeaderName = "X-CSRFToken"
@@ -192,6 +193,13 @@ export default {
     },
     me: { username: 'Annonymous' },
   }),
+
+  watch: {
+    me(newVal, oldVal) {
+      console.log("watch.me()...", newVal, oldVal);
+      EventBus.$emit('me_change', newVal);
+    }
+  },
 
   created() {
     this.getUserInfo();
